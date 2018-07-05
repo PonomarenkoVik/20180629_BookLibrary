@@ -1,0 +1,216 @@
+﻿@model System.Data.DataTable
+@{
+    ViewBag.Title = "Index";
+}
+<!doctype html>
+<html lang="en">
+<head>
+   
+    <title>Book library</title>
+   
+</head>
+<body>
+
+    <h1>Authors</h1>
+
+    @{
+        string outStr;
+    }
+    @if (ViewData["isAdmin"] != null && (bool)ViewData["isAdmin"])
+    {
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Book")">All books</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Create", "Author")">Add author</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "User")">Users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Author")">Authors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link my-lg-0" href="@Url.Action("AllHistory", "History")">History</a>
+                    </li>
+
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    @if (ViewData["searchString"] != null)
+                    {
+                        <input name="searchString" value=@ViewData["searchString"] class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                        outStr = string.IsNullOrEmpty(Request.Params["searchString"]) ? null : Request.Params["searchString"];
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="@Url.Action("Index", "Author", new { searchString = outStr })">Search</button>
+                    }
+                    else
+                    {
+                        <input name="searchString" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                        outStr = string.IsNullOrEmpty(Request.Params["searchString"]) ? null : Request.Params["searchString"];
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="@Url.Action("Index", "Author", new {searchString = outStr } )">Search</button>
+                    }
+                </form>
+            </div>
+        </nav>
+    }
+    else if (ViewData["idUser"] != null)
+    {
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Book")">All books</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("GetUserBooks", "User", new {idUser = ViewData["idUser"]})">My books</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("ReceiveAbsentBooks", "User", new {idUser = ViewData["idUser"]})">Receive a book</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Author")">Authors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link my-lg-0" href="@Url.Action("Index", "History", new {idUser = ViewData["idUser"]})">My history</a>
+                    </li>
+
+                </ul>
+                <form name="searchString" class="form-inline my-2 my-lg-0">
+
+                    @if (ViewData["searchString"] != null)
+                    {
+                        <input name="searchString" value=@ViewData["searchString"] class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                        outStr = string.IsNullOrEmpty(Request.Params["searchString"]) ? "" : Request.Params["searchString"];
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="@Url.Action("Index", "Author", new { searchString = outStr })">Search</button>
+                    }
+                    else
+                    {
+                        <input name="searchString" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                        outStr = string.IsNullOrEmpty(Request.Params["searchString"]) ? "" : Request.Params["searchString"];
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="@Url.Action("Index", "Author", new {searchString = outStr } )">Search</button>
+                    }
+
+                </form>
+
+            </div>
+        </nav>
+    }
+    else
+    {
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Book")">All books</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Author")">Authors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Login", "Account")">Enter to the site</a>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    @if (ViewData["searchString"] != null)
+                    {
+                        <input name="searchString" value=@ViewData["searchString"] class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                        outStr = string.IsNullOrEmpty(Request.Params["searchString"]) ? null : Request.Params["searchString"];
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="@Url.Action("Index", "Author", new { searchString = outStr })">Search</button>
+                    }
+                    else
+                    {
+                        <input name="searchString" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                        outStr = string.IsNullOrEmpty(Request.Params["searchString"]) ? null : Request.Params["searchString"];
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="@Url.Action("Index", "Author", new {searchString = outStr } )">Search</button>
+                    }
+                </form>
+            </div>
+        </nav>
+    }
+
+
+    @{
+        int page = (int)ViewData["pageNumber"];
+        short pageSize = (short)ViewData["pageSize"];
+    }
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-condensed">
+            <tr>
+                <th>№</th>
+                <th>First name</th>
+                <th>Second name</th>
+                <th>Year of birth</th>
+            </tr>
+
+            @for (int i = 0; i < Model.Rows.Count; i++)
+            {
+                <tr>
+                    <td>@((page - 1) * pageSize + i + 1)</td>
+                    <td>@Model.Rows[i][1]</td>
+                    <td>@Model.Rows[i][2]</td>
+                    <td>@Model.Rows[i][3]</td>
+                    @if (ViewData["isAdmin"] != null && (bool)ViewData["isAdmin"])
+                    {
+                        <th><a href="@Url.Action("Edit", "Author", new { idAuthor = Model.Rows[i][0] })" role="button" class="btn btn-outline-primary btn-block">Edit</a></th>
+                    }
+                    <th><a href="@Url.Action("BooksByAuthor", "Book", new { idAuthor = Model.Rows[i][0] })" role="button" class="btn btn-outline-primary btn-block">Books</a></th>
+                </tr>
+            }
+        </table>
+    </div>
+    <nav aria-label="...">
+        <ul class="pagination">
+
+
+            @if (page == 1)
+            {
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                </li>
+                <li class="page-item active">
+                    <a class="page-link" href="@Url.Action("Index", "Author", new { pageNumber = page, searchString = outStr })">@page<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="page-item"><a class="page-link" href="@Url.Action("Index", "Author", new { pageNumber = page + 1, searchString = outStr })">@(page + 1)</a></li>
+                <li class="page-item"><a class="page-link" href="@Url.Action("Index", "Author", new { pageNumber = page + 2, searchString = outStr })">@(page + 2)</a></li>
+                <li class="page-item"><a class="page-link" href="@Url.Action("Index", "Author", new { pageNumber = page + 2, searchString = outStr })">@(page + 3)</a></li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", "Author", new { pageNumber = page - 1, searchStr = outStr })">Previous</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="@Url.Action("Index", "Author", new { pageNumber = page - 1, searchString = outStr })">@(page - 1)</a></li>
+                <li class="page-item active">
+                    <a class="page-link" href="@Url.Action("Index", "Author", new { pageNumber = page, searchStr = outStr })">@page <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="page-item"><a class="page-link" href="@Url.Action("Index", "Author", new { pageNumber = page + 1, searchString = outStr })">@(page + 1)</a></li>
+                <li class="page-item"><a class="page-link" href="@Url.Action("Index", "Author", new { pageNumber = page + 2, searchString = outStr })">@(page + 2)</a></li>
+            }
+            <li class="page-item">
+                <a class="page-link" href="@Url.Action("Index", "Author", new { pageNumber = page + 1, searchString = outStr })">Next</a>
+            </li>
+        </ul>
+    </nav>
+
+</body>
+
+
+<div>
+    @Html.ActionLink("Back", "Index", "Book")
+</div>
+
+</html>

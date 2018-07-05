@@ -1,0 +1,59 @@
+﻿
+@{
+    ViewBag.Title = "AllHistory";
+}
+
+<!doctype html>
+<html lang="en">
+<head>
+    
+    <title>All history</title>
+    
+</head>
+<body>   
+
+    <h1>All history</h1>
+    <table class="table table-bordered table-striped">
+        @if (Model.Rows.Count > 0)
+        {
+            <tr>
+                <th>№</th>
+                <th>Book name</th>
+                <th>Publication year</th>
+                <th>User first name</th>
+                <th>User second name</th>
+                <th>E-mail</th>
+                <th>Receive date</th>
+                <th>Return date</th>
+            </tr>
+        }
+        else
+        {
+            <h3>History is empty</h3>
+        }
+
+
+        @if (Model.Rows.Count > 0)
+        {
+            for (int i = 0; i < Model.Rows.Count; i++)
+            {
+            <tr>
+                <td style="align-content: center">@(i + 1)</td>
+                <td style="align-content: center">@Model.Rows[i][1]</td>
+                <td style="align-content: center">@Model.Rows[i][2]</td>
+                <td>@Model.Rows[i][3]</td>
+                <td>@Model.Rows[i][4]</td>
+                <td>@Model.Rows[i][5]</td>
+                <td>@Model.Rows[i][6]</td>
+                <td>@Model.Rows[i][7]</td>
+            </tr>
+            }
+        }
+        <tr>
+            <td>
+                @Html.ActionLink("Back", "Index", "Book")
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

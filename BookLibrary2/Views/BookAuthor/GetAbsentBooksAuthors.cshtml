@@ -1,0 +1,39 @@
+﻿@model System.Data.DataTable
+@{
+    ViewBag.Title = "GetAbsentBooksAuthors";
+}
+<!doctype html>
+<html lang="en">
+<head>  
+
+    <title>Book library</title>
+    
+</head>
+<body>
+
+    <h1>Add authors</h1>
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th>№</th>
+            <th>First name</th>
+            <th>Second name</th>
+            <th>Birth year</th>
+        </tr>
+        @for (int i = 0; i < Model.Rows.Count; i++)
+        {
+            <tr>
+                <td>@(i + 1)</td>
+                <td>@Model.Rows[i][2]</td>
+                <td>@Model.Rows[i][3]</td>
+                <td>@Model.Rows[i][4]</td>
+                <th><a href="@Url.Action("Create", "BookAuthor", new { idBook = @ViewData["idBook"], idAuthor = Model.Rows[i][1] })" role="button" class="btn btn-outline-primary btn-block">Add author</a></th>
+            </tr>
+        }
+    </table>
+    <tr>
+        <td>
+            @Html.ActionLink("Back", "Index", new { idBook = Model.Rows[0][0] })
+        </td>
+    </tr>
+</body>
+</html>

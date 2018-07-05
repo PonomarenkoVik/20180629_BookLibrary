@@ -1,0 +1,199 @@
+﻿@using System.ComponentModel.DataAnnotations
+@using System.Web.UI.WebControls
+@using BookLibrary2.Models
+@model System.Data.DataTable
+@{
+    ViewBag.Title = "BooksByAuthor";
+}
+<!doctype html>
+
+
+
+<html lang="en">
+<head>
+
+    <title>Book library</title>
+
+</head>
+<body>
+    <h1>Author's Books</h1>
+    
+    @if (ViewData["isAdmin"] != null)
+    {
+            <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Index", "Book")">All books</a>
+        </li>                
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Index", "User")">Users</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Index", "Author")">Authors</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link my-lg-0" href="@Url.Action("AllHistory", "History")">History</a>
+        </li>
+
+    </ul>   
+</div>
+</nav>
+
+ 
+
+    }
+    else if (ViewData["idUser"] != null)           
+    {
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Book")">All books</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("GetUserBooks", "User", new {idUser = ViewData["idUser"]})">My books</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("ReceiveAbsentBooks", "User", new {idUser = ViewData["idUser"]})">Receive a book</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Author")">Authors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link my-lg-0" href="@Url.Action("Index", "History", new {idUser = ViewData["idUser"]})">My history</a>
+                    </li>
+
+                </ul>         
+            </div>
+        </nav>
+    }
+    else
+    {
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Book")">All books</a>
+                    </li>                             
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Author")">Authors</a>
+                    </li> 
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Login", "Account")">Enter to the site</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    }
+
+     
+@{
+    int page = (int)ViewData["pageNumber"];
+    short pageSize = (short)ViewData["pageSize"];
+}
+<div class="table-responsive">
+    <table class="table table-bordered table-striped table-condensed">
+        <tr>
+            <td align="center">№</td>
+            <td align="center">Name</td>
+            <td align="center">Publication year</td>
+            <td align="center">amount</td>
+        </tr>
+
+        @for (int i = 0; i < Model.Rows.Count; i++)
+        {
+            <tr>
+                <td>@((page - 1) * pageSize + i + 1)</td>
+                <td align="left">@Model.Rows[i][1]</td>
+                <td align="center">@Model.Rows[i][2]</td>
+                <td align="center">@Model.Rows[i][3]</td>
+
+                @if (ViewData["isAdmin"] != null && (bool)ViewData["isAdmin"])
+                {
+                    <td align="left"><a href="@Url.Action("Edit", "Book", new {id = Model.Rows[i][0]})" role="button" class="btn btn-outline-primary btn-block">Edit</a></td>
+                    <td align="left"><a href="@Url.Action("Delete", "Book", new {id = Model.Rows[i][0]})" role="button" class="btn btn-outline-primary btn-block">Delete</a></td>
+                    <td align="left"><a href="@Url.Action("Index", "BookAuthor", new {idBook = Model.Rows[i][0]})" role="button" class="btn btn-outline-primary btn-block">Authors</a></td>
+                    <td align="left"><a href="@Url.Action("BookHistory", "History", new {idBook = Model.Rows[i][0]})" role="button" class="btn btn-outline-primary btn-block">History</a></td>
+                }
+                else
+                {
+                    <td align="left"><a href="@Url.Action("Index", "BookAuthor", new {idBook = Model.Rows[i][0]})" role="button" class="btn btn-outline-primary btn-block">Authors</a></td>
+                }
+
+
+            </tr>
+        }
+    </table>
+</div>
+
+
+    <nav aria-label="...">
+        <ul class="pagination">
+
+            @{
+                long idAuth = 0;
+                if (ViewData["idAuthor"] != null)
+                {
+                    idAuth = (long)ViewData["idAuthor"];
+                }
+            }
+            @if (page == 1)
+            {
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                </li>
+                <li class="page-item active">
+                    <a class="page-link" href="@Url.Action("BooksByAuthor", "Book", new {idAuthor = idAuth, pageNumber = page })">@page<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="page-item"><a class="page-link" href="@Url.Action("BooksByAuthor", "Book", new { idAuthor = idAuth, pageNumber = page + 1 })">@(page + 1)</a></li>
+                <li class="page-item"><a class="page-link" href="@Url.Action("BooksByAuthor", "Book", new { idAuthor = idAuth, pageNumber = page + 2 })">@(page + 2)</a></li>
+                <li class="page-item"><a class="page-link" href="@Url.Action("BooksByAuthor", "Book", new { idAuthor = idAuth, pageNumber = page + 2 })">@(page + 3)</a></li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("BooksByAuthor", "Book", new { idAuthor = idAuth, pageNumber = page - 1 })">Previous</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="@Url.Action("BooksByAuthor", "Book", new { idAuthor = idAuth, pageNumber = page - 1 })">@(page - 1)</a></li>
+                <li class="page-item active">
+                    <a class="page-link" href="@Url.Action("BooksByAuthor", "Book", new { idAuthor = idAuth, pageNumber = page })">@page <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="page-item"><a class="page-link" href="@Url.Action("BooksByAuthor", "Book", new { idAuthor = idAuth, pageNumber = page + 1 })">@(page + 1)</a></li>
+                <li class="page-item"><a class="page-link" href="@Url.Action("BooksByAuthor", "Book", new { idAuthor = idAuth, pageNumber = page + 2 })">@(page + 2)</a></li>
+            }
+            <li class="page-item">
+                <a class="page-link" href="@Url.Action("BooksByAuthor", "Book", new { idAuthor = idAuth, pageNumber = page + 1 })">Next</a>
+            </li>
+        </ul>
+    </nav>
+
+
+<div>
+    @Html.ActionLink("Main", "Index", "Book")
+</div>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
